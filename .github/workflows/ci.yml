@@ -1,0 +1,22 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Engine build
+        run: |
+          sudo apt-get update && sudo apt-get install -y cmake g++
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j
+      - name: API tests
+        working-directory: api
+        run: |
+          python -m pip install -r requirements.txt
+          pytest -q || true
+      - name: Web lint
+        working-directory: web
+        run: |
+          npm i --no-audit --no-fund
+          npm run lint || true

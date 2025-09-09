@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node
+node_modules/
+.next/
+
+# C++
+build/
+
+# Docker
+*.log
+
+# Misc
+.env.local
