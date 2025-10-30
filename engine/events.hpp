@@ -1,30 +1,31 @@
 #pragma once
 #include <cstdint>
+#include "lob/types.hpp"
 
-using OrderId = std::uint64_t;
-using Price   = std::int64_t;   // ticks
-using Qty     = std::int64_t;
+// Re-export scalar types + Side so tests can write Side::Bid/Side::Ask
+using Side    = lob::Side;
+using OrderId = lob::OrderId;
+using Price   = lob::Price;
+using Qty     = lob::Qty;
 
-enum class Side : std::uint8_t { Buy=0, Sell=1 };
-enum class EventKind : std::uint8_t { Fill, PartialFill, Cancel, BookChange };
-
+// ---- Events carried on the EventBus ----
 struct FillEvent {
   OrderId taker_id;
   OrderId maker_id;
-  Side taker_side;
-  Price px;
-  Qty   qty;
+  Side    side;          // taker side (Bid/Ask)
+  Price   px;
+  Qty     qty;
 };
 
 struct CancelEvent {
   OrderId id;
   Side    side;
   Price   px;
-  Qty     qty_canceled;
+  Qty     qty_canceled;  // tests expect this exact field name
 };
 
 struct BookChangeEvent {
-  Side side;
+  Side  side;
   Price px;
-  Qty   new_level_qty; // 0 if level removed
+  Qty   level_qty;       // total resting at this price after the change
 };

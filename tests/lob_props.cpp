@@ -16,12 +16,10 @@ int main() {
 
   std::vector<OrderId> live;
 
-  // helper: remove id from `live` if present (choose ONE of the two bodies)
+  // helper: remove id from `live` if present
   auto remove_live = [&](OrderId id) {
-    // Option A (C++20): erase by value
-    std::erase(live, id);
-
-    // Option B (pre-C++20): guard the iterator
+    std::erase(live, id);                   // C++20
+    // pre-C++20:
     // auto it = std::find(live.begin(), live.end(), id);
     // if (it != live.end()) live.erase(it);
   };
@@ -46,7 +44,8 @@ int main() {
     } else if (op <= 7) {
       // cancel
       OrderId id = pick();
-      if (book.cancel(id)) remove_live(id);
+      auto c = book.cancel(id);
+      if (c.ok) remove_live(id);
     } else {
       // reduce
       OrderId id = pick();

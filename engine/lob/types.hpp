@@ -5,22 +5,37 @@
 namespace lob {
 
 using OrderId = std::uint64_t;
-using Qty     = std::int64_t;      // >=1 while resting
-using Price   = std::int64_t;      // integer ticks
-using TimeNs  = std::uint64_t;     // monotonic ns
+using Qty     = std::int64_t;   // >=1 while resting
+using Price   = std::int64_t;   // integer ticks
+using TimeNs  = std::uint64_t;  // monotonic ns
 
-enum class Side : std::uint8_t { Bid=0, Ask=1 };
-inline const char* side_str(Side s){ return s==Side::Bid?"BID":"ASK"; }
+// Primary sides + back-compat aliases used by tests
+enum class Side : std::uint8_t {
+  Bid  = 0,
+  Ask  = 1,
+  Buy  = 0,   // alias of Bid
+  Sell = 1    // alias of Ask
+};
+
+// Avoid duplicate switch cases (Buy==Bid, Sell==Ask)
+inline constexpr const char* side_str(Side s) {
+  const auto v = static_cast<std::uint8_t>(s);
+  if (v == 0) return "BID";
+  if (v == 1) return "ASK";
+  return "?";
+}
 
 struct BestOfBook {
   std::optional<Price> bid, ask;
+
   std::optional<double> mid() const {
     if (!bid || !ask) return std::nullopt;
-    return 0.5 * (double(*bid) + double(*ask));
+    return 0.5 * (static_cast<double>(*bid) + static_cast<double>(*ask));
   }
+
   std::optional<Price> spread() const {
     if (!bid || !ask) return std::nullopt;
-    return *ask - *bid; // unwrap std::optional<Price>
+    return *ask - *bid;
   }
 };
 
