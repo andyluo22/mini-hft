@@ -86,7 +86,32 @@ target_include_directories(test_volume_property PRIVATE ${CMAKE_SOURCE_DIR} ${CM
 target_compile_options(test_volume_property PRIVATE -O2 ${COMMON_WARN_FLAGS})
 target_link_libraries(test_volume_property PRIVATE gtest_main Threads::Threads)
 
+# ----- Day 6 new tests -----
+add_executable(test_ioc_fok tests/test_ioc_fok.cpp)
+target_include_directories(test_ioc_fok PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/engine)
+target_compile_options(test_ioc_fok PRIVATE -O2 ${COMMON_WARN_FLAGS})
+target_link_libraries(test_ioc_fok PRIVATE gtest_main Threads::Threads)
+
+add_executable(test_replace tests/test_replace.cpp)
+target_include_directories(test_replace PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/engine)
+target_compile_options(test_replace PRIVATE -O2 ${COMMON_WARN_FLAGS})
+target_link_libraries(test_replace PRIVATE gtest_main Threads::Threads)
+
+add_executable(test_stp tests/test_stp.cpp)
+target_include_directories(test_stp PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/engine)
+target_compile_options(test_stp PRIVATE -O2 ${COMMON_WARN_FLAGS})
+target_link_libraries(test_stp PRIVATE gtest_main Threads::Threads)
+
+add_executable(test_no_ghost_orders tests/test_no_ghost_orders.cpp)
+target_include_directories(test_no_ghost_orders PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/engine)
+target_compile_options(test_no_ghost_orders PRIVATE -O2 ${COMMON_WARN_FLAGS})
+target_link_libraries(test_no_ghost_orders PRIVATE gtest_main Threads::Threads)
+
 # Optional: enable CTest integration
 include(CTest)
-add_test(NAME test_match COMMAND test_match)
-add_test(NAME test_volume_property COMMAND test_volume_property)
+add_test(NAME test_match            COMMAND test_match)
+add_test(NAME test_volume_property  COMMAND test_volume_property)
+add_test(NAME test_ioc_fok          COMMAND test_ioc_fok)
+add_test(NAME test_replace          COMMAND test_replace)
+add_test(NAME test_stp              COMMAND test_stp)
+add_test(NAME test_no_ghost_orders  COMMAND test_no_ghost_orders)

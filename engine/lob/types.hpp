@@ -4,10 +4,11 @@
 
 namespace lob {
 
-using OrderId = std::uint64_t;
-using Qty     = std::int64_t;   // >=1 while resting
-using Price   = std::int64_t;   // integer ticks
-using TimeNs  = std::uint64_t;  // monotonic ns
+using OrderId  = std::uint64_t;
+using TraderId = std::uint64_t;   // NEW: owner/account id for STP & replace
+using Qty      = std::int64_t;    // >=1 while resting
+using Price    = std::int64_t;    // integer ticks
+using TimeNs   = std::uint64_t;   // monotonic ns
 
 // Primary sides + back-compat aliases used by tests
 enum class Side : std::uint8_t {

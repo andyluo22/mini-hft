@@ -14,24 +14,26 @@ TEST(Property, VolumeConservation) {
 
   // seed book with both sides
   for (int i=0;i<200;i++) {
-    Side side = sd(rng)==0?Side::Buy:Side::Sell;
+    Side side = sd(rng)==0 ? Side::Buy : Side::Sell;
     eng.add(1000+i+1, side, px(rng), qd(rng));
   }
 
   long long posted=0, canceled=0, traded=0;
+  (void)posted; // silence unused in optimized builds
+
   for (int i=0;i<5000;i++) {
     int op = i%10;
     if (op<6) { // add limit
-      Side s = sd(rng)==0?Side::Buy:Side::Sell;
+      Side s = sd(rng)==0 ? Side::Buy : Side::Sell;
       eng.add(200000+i, s, px(rng), qd(rng));
     } else if (op<8) { // market
-      Side s = sd(rng)==0?Side::Buy:Side::Sell;
+      Side s = sd(rng)==0 ? Side::Buy : Side::Sell;
       eng.market(300000+i, s, qd(rng));
     } else { // cancel random a few ids in our range
       eng.cancel(200000 + (i-100) ); // best effort
     }
     // drain bus and track
-    while (auto ev=bus.try_poll()) {
+    while (auto ev = bus.try_poll()) {
       if (std::holds_alternative<FillEvent>(*ev)) {
         traded += std::get<FillEvent>(*ev).qty;
       } else if (std::holds_alternative<CancelEvent>(*ev)) {
@@ -46,4 +48,3 @@ TEST(Property, VolumeConservation) {
   EXPECT_GE(traded, 0);
   EXPECT_GE(canceled, 0);
 }
-
